@@ -1,0 +1,62 @@
+<template>
+  <view class="xr-book-item" @tap="toGroup">
+    <image mode="widthFix" class="book-cover-image" src="{{ book.item.thumbImgUrl }}" />
+    <view class="xr-bottom-bar">
+      <text class="xr-name">{{ book.group.name }}</text>
+      <image class="xr-bar-bg" mode="widthFix" src="/images/ic_title-bar.png" />
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class BookItem extends wepy.component {
+  props = {
+    book: {}
+  }
+  methods = {
+    toGroup() {
+      wepy.navigateTo({ url: `/pages/group?groupId=${this.book.groupId}` })
+    }
+  }
+}
+</script>
+<style lang="less">
+.xr-book-item {
+  flex: 1;
+  height: 100%;
+  padding: 0 16rpx;
+  .book-cover-image {
+    width: 100%;
+  }
+  .xr-bottom-bar {
+    margin-top: -70rpx;
+    position: relative;
+    @xr-bottom-bar-height: 54rpx;
+    height: @xr-bottom-bar-height !important;
+    width: 100%;
+    .xr-name {
+      height: @xr-bottom-bar-height !important;
+      line-height: @xr-bottom-bar-height;
+      z-index: 2;
+      width: 100%;
+      height: auto;
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: block;
+      text-align: center;
+      font-size: 24rpx;
+      color: #FFFFFF;
+    }
+    .xr-bar-bg {
+      z-index: 1;
+      height: @xr-bottom-bar-height !important;
+      width: -webkit-calc(100% + 9rpx);
+      position: absolute;
+      left: -14rpx;
+      top: 0;
+    }
+  }
+}
+</style>

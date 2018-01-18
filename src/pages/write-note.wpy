@@ -1,0 +1,59 @@
+<template>
+<view class="page">
+  <view class="page__bd">
+    <form @submit="onPostTipic">
+      <view class="weui-cells__title">写点什么吧</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell">
+          <view class="weui-cell__bd">
+            <textarea class="weui-textarea" name="content" placeholder="请输入文本" style="height: 3.3em" />
+            <view class="weui-textarea-counter">0/200</view>
+          </view>
+        </view>
+      </view>
+      <view class="weui-btn-area">
+        <button form-type="submit" class="weui-btn" type="primary">确定</button>
+      </view>
+    </form>
+  </view>
+</view>
+</template>
+<style lang="less">
+@import '../styles/component.less';
+</style>
+<script>
+import wepy from 'wepy'
+import isEmpty from 'lodash.isempty'
+import Toast from 'wepy-com-toast'
+import AuthMixin from '../mixins/auth'
+import api from '../http/api'
+
+export default class WriteNode extends wepy.page {
+  components = {
+    toast: Toast
+  }
+  mixins = [AuthMixin]
+  config = {
+  }
+  data = {
+    groupId: null
+  }
+  methods = {
+    onPostTipic(e) {
+      var {content} = e.detail.value
+      wepy.showLoading()
+      api.postTopic(this.groupId, content).then( res => {
+        wepy.navigateTo({ url: `/pages/group?groupId=${this.groupId}` })
+        wepy.hideLoading()
+      })
+    }
+  }
+  onAuthLoad({groupId}) {
+    if (isEmpty(groupId)) {
+      wepy.navigateTo({ url: '/pages/index' })
+    } else {
+      this.groupId = groupId
+    }
+  }
+}
+</script>

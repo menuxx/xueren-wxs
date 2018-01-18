@@ -1,0 +1,19 @@
+<style lang="less">
+</style>
+<template>
+  <view>
+    11111
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class MyLibrary extends wepy.page {
+    config = {
+    }
+    data = {
+    }
+    onLoad() {
+    }
+}
+</script>

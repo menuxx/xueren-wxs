@@ -1,0 +1,113 @@
+<template>
+  <view class="page-container">
+    <view class="search-bar" @tap="tap">
+      <image mode="widthFix" class="ic-search" src="/images/ic_search.png" />
+      <text class="placeholder">请输入书名搜索读书群</text>
+    </view>
+    <view class="xr-bookshelf">
+      <repeat for="{{groupBooks}}" item="group">
+        <groupbookitem :group="group"></groupbookitem>
+      </repeat>
+      <view class="empty-plane" wx:if="{{books.length === 0}}" @tap="addNewBook">
+        <image class="add-new-book" mode="widthFix" src="../images/ic_add-new.png" />
+      </view>
+    </view>
+    <view class="bottom-text">
+      <text class="small-text" wx:if="{{ books.length > 0 }}">共添加{{ books.length }}个书友群</text>
+      <text class="small-text" wx:else>现在就去选一本书</text>
+    </view>
+  </view>
+</template>
+<style lang="less">
+.bottom-text {
+  text-align: center;
+  .small-text {
+    font-size: 26rpx;
+    color: #999999;
+  }
+}
+.xr-bookshelf {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+.empty-plane {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 40rpx 0;
+  .add-new-book {
+    width: 30%;
+  }
+}
+.search-bar {
+  background-color: #F6F6F6;
+  margin: 40rpx;
+  padding: 20rpx 20rpx;
+  border-radius: 6rpx;
+  display: flex;
+  align-items: center;
+  .ic-search {
+    width: 40rpx;
+    height: 40rpx;
+    margin-right: 16rpx;
+  }
+  .placeholder {
+    font-size: 30rpx;
+    color: #999999;
+  }
+}
+</style>
+<script>
+import wepy from 'wepy'
+import chunk from 'lodash.chunk'
+import AuthMixin from '../mixins/auth'
+import api from '../http/api'
+import {cdnFullUrl} from '../lib/image'
+import GroupBookItem from '@/components/group-book-item'
+
+export default class Index extends wepy.page {
+  components = {
+    groupbookitem: GroupBookItem
+  }
+  config = {
+    navigationBarTitleText: '雪人读书'
+  }
+  mixins = [AuthMixin]
+  data = {
+    books: []
+  }
+  computed = {
+    groupBooks: () => {
+      var books = this.books.map( (book, i) => {
+        if ( (i + 1) === this.books.length ) {
+          book._last = true
+        } else {
+          book._last = false
+        }
+        book.item.thumbImgUrl = cdnFullUrl(book.item.thumbImgs, '/images/books/')
+        return book
+      })
+      return chunk(books, 3)
+    }
+  }
+  methods = {
+    addNewBook() {
+      wepy.navigateTo({ url: '/pages/webview' })
+    }
+  }
+  onAuthLoad(args, userInfo) {
+    // 已认证页面加载完成
+    api.loadMyGroups().then(res => {
+      this.books = res.data
+      this.$apply()
+    })
+  }
+  onLoad() {
+    // 未认证页面加载完成
+  }
+}
+</script>

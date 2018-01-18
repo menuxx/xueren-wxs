@@ -1,0 +1,64 @@
+<template>
+<view class="xr-books-line">
+  <view class="xr-books-list">
+    <repeat for="{{groupBooks}}" item="groupBook">
+      <block>
+        <bookitem :book="groupBook" wx:if="{{ groupBook != null }}"></bookitem>
+        <view class="empty-book-placeholder" wx:else></view>
+      </block>
+    </repeat>
+  </view>
+  <image mode="widthFix" class="bookench-bottom-bar" src="/images/bookbench-bottom-bar.png" />
+</view>
+</template>
+<script>
+import wepy from 'wepy'
+import BookItem from '@/components/book-item'
+
+export default class GroupBookItem extends wepy.component {
+  components = {
+    bookitem: BookItem
+  }
+  computed = {
+    groupBooks: () => {
+      if (!this.group) {
+        return []
+      }
+      if (this.group.length === 1) {
+        this.group.push(null)
+        this.group.push(null)
+      } else if (this.group.length === 2) {
+        this.group.push(null)
+      }
+      return this.group
+    }
+  }
+  props = {
+    group: []
+  }
+}
+</script>
+<style lang="less">
+.xr-books-line {
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: center;
+  .xr-books-list {
+    width: -webkit-calc(100% - 10rpx);
+    margin: 0 20rpx;
+    height: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .bookench-bottom-bar {
+    width: 95%;
+  }
+}
+.empty-book-placeholder {
+  flex: 1;
+}
+</style>

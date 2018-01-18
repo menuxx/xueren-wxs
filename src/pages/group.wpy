@@ -1,0 +1,416 @@
+<template>
+  <view class="page-container">
+     <toast />
+    <view class="xr-book-bench">
+
+      <view class="xr-book-panel">
+
+        <view class="xr-book-item">
+          <image mode="widthFix" class="book-cover-image" src="{{ group.book.coverImageUrl }}" />
+          <view class="xr-bottom-bar">
+            <text class="xr-name">{{ group.name }}</text>
+            <image class="xr-bar-bg" mode="widthFix" src="/images/ic_title-bar.png" />
+          </view>
+        </view>
+
+        <view class="xr-group-info">
+          <text class="title">{{ group.book.name }}</text>
+          <text class="author">作者：{{ group.book.authors }}</text>
+          <view class="group-user-count">
+            人气：<text class="count-number">{{ group.userCount }}</text>
+          </view>
+        </view>
+
+      </view>
+
+      <image mode="widthFix" class="bookbench-bottom-bar" src="/images/bookbench-bottom-bar.png" />
+
+    </view>
+
+    <view class="xr-opts-bar">
+      <view class="opt-item-btn" @tap="onPostTopic">
+        <image class="opt-icon" src="/images/ic_edit.png" />
+        <text class="opt-name">发表</text>
+      </view>
+      <view class="opt-item-btn" @tap="onAbout">
+        <image class="opt-icon" src="/images/ic_list.png" />
+        <text class="opt-name">关于</text>
+      </view>
+      <view class="opt-item-btn" @tap="onShare">
+        <image class="opt-icon" src="/images/ic_share.png" />
+        <text class="opt-name">分享有赏</text>
+      </view>
+    </view>
+
+    <view class="xr-talk-topic-list">
+
+      <repeat for="{{ topics }}" item="topic" key="id" index="index">
+      <view class="talk-topic-panel">
+
+        <view class="talker">
+          <view class="talker-topic-meta">
+            <image class="user-avatar" mode="widthFix" src="{{ topic.creator.avatarUrl }}" />
+            <view class="talk-about">
+              <view class="talk-about-p1">
+                {{ topic.creator.userName }} <text class="tag-top" wx:if="{{ topic.sortWeight2 == 2 }}">置顶</text>
+              </view>
+              <view class="talk-about-p1">
+                {{ dateFormat.dateTime(topic.createAt) }}
+              </view>
+            </view>
+          </view>
+
+          <view class="talk-topic-content">{{ topic.content }}</view>
+
+          <view class="talk-topic-bottom-line">
+            <view class="expand-btn">
+              展开 <image class="expand-icon" mode="widthFix" src="/images/ic_expand.png" />
+            </view>
+          </view>
+          <!--
+          <view class="comment-line1">
+            <view class="comment-talkers">
+              <image class="comment-avatar" mode="widthFix" src="http://wx.qlogo.cn/mmopen/vi_32/8Az3HbSkegbnEY85FZxlyg1KuD9ibUEOnXSPqibnXgWEn9tj3JkibY2lcr1sOcWGNOoNgzk5pNTSWEicX4QVI7ABHw/0" />
+              <image class="comment-avatar" mode="widthFix" src="http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eoThvnXzvKicuG5fH7NYOBCoUwqrYS4WRjvAStItJawBbAkAWQYakhafJE9dq2VvahpI7sVDxe5gxg/0" />
+              <image class="comment-avatar" mode="widthFix" src="http://wx.qlogo.cn/mmopen/vi_32/54ZSHwFeSoM9RTibiaeHIP6JDIC2yw2Hz1GvKDJrn97jM7jL92mBjwUnRO6lOZvaicqhPt4ZaX2sQFUNyOVgjuXWQ/0" />
+              <image class="comment-avatar" mode="widthFix" src="http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epFic1nTvN0TjAhD43pgfeiaYKLHmf1PgaCDzHBjYE9Xic89eqvOVR0AspFDCTeu1NL3yuhNXYtNAGNw/0" />
+              <image class="comment-avatar" mode="widthFix" src="http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTJev32kzhFlXznM3ckNNt58OSPDu8pEvzOhaBwicJG3o8oibOtMk8j3RAZ5deATPQPfBUWlvXIzVsAQ/0" />
+            </view>
+            <view class="desc-text">
+              <text class="comment-count">25</text>位书友点赞
+            </view>
+            <view class="opt-btns">
+              <image class="opt-item-btn" src="/images/ic_approve.png" mode="widthFix" />
+              <image class="opt-item-btn" src="/images/ic_comment.png" mode="widthFix" />
+              <image class="opt-item-btn" src="/images/ic_share-gray.png" mode="widthFix" />
+            </view>
+          </view>
+
+          <view class="comment-line2">
+            <view class="comment-list">
+              <view class="comment-item">
+                <text class="talk-from">李大哥</text> : <text class="content">好好读书</text>
+              </view>
+              <view class="comment-item">
+                <text class="talk-from">大师兄</text>回复<text class="reply-to">李大哥</text> : <text class="content">感谢支持，欢迎加入</text>
+              </view>
+            </view>
+          </view>
+
+          -->
+
+        </view>
+
+      </view>
+      </repeat>
+
+    </view>
+
+  </view>
+</template>
+<style lang="less">
+.page-container {
+}
+.xr-book-bench {
+  background-color: #fff;
+  text-align: center;
+  .xr-book-panel {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 90rpx;
+    .xr-book-item {
+        flex: 1;
+        height: 100%;
+        padding: 0 16rpx;
+        .book-cover-image {
+            width: 210rpx;
+        }
+        .xr-bottom-bar {
+            margin-top: -70rpx;
+            position: relative;
+            @xr-bottom-bar-height: 54rpx;
+            height: @xr-bottom-bar-height !important;
+            width: 100%;
+            .xr-name {
+                height: @xr-bottom-bar-height !important;
+                line-height: @xr-bottom-bar-height;
+                z-index: 2;
+                width: 100%;
+                height: auto;
+                position: absolute;
+                left: 0;
+                top: 0;
+                display: block;
+                text-align: center;
+                font-size: 24rpx;
+                color: #FFFFFF;
+            }
+            .xr-bar-bg {
+                z-index: 1;
+                height: @xr-bottom-bar-height !important;
+                width: -webkit-calc(100% + 10rpx);
+                position: absolute;
+                left: -12rpx;
+                top: 0;
+            }
+        }
+    }
+    .xr-group-info {
+      flex: 1.5;
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      text-align: left;
+      .title {
+        font-size: 30rpx;
+        margin-bottom: 20rpx;
+      }
+      .author {
+        font-size: 26rpx;
+        margin-bottom: 20rpx;
+      }
+      .group-user-count {
+        font-size: 26rpx;
+        margin-bottom: 20rpx;
+        .count-number {
+          color: #F18B27;
+        }
+      }
+    }
+  }
+  .bookbench-bottom-bar {
+    width: 95%;
+  }
+}
+.xr-opts-bar {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  padding: 20rpx 0;
+  border-bottom: 2rpx solid #CCCCCC;
+  .opt-item-btn:not(:last-child)::after {
+    position: absolute;
+    right: 0;
+    top: 10rpx;
+    content: ' ';
+    height: 20rpx;
+    width: 4rpx;
+    background-color: #CCCCCC;
+    color: #CCCCCC;
+  }
+  .opt-item-btn {
+    flex: 1;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    .opt-icon {
+      width: 40rpx;
+      height: 40rpx;
+      margin-right: 18rpx;
+    }
+    .opt-name {
+      font-size: 26rpx;
+    }
+  }
+}
+.xr-talk-topic-list {
+  background-color: #F7F7F7;
+  .talk-topic-panel {
+    background-color: #fff;
+    margin: 20rpx 0;
+    padding: 0 20rpx;
+    border-bottom: 1rpx solid #CCCCCC;
+    .talker {
+      display: flex;
+      flex-flow: column nowrap;
+      .talker-topic-meta {
+        display: flex;
+        flex-flow: row nowrap;
+        margin: 20rpx 0;
+        .user-avatar {
+          width: 80rpx;
+          height: 80rpx;
+          border-radius: 50%;
+          margin-right: 14rpx;
+        }
+        .talk-about {
+          display: flex;
+          flex-flow: column nowrap;
+          justify-content: space-between;
+          .talk-about-p1 {
+            font-size: 26rpx;
+          }
+          .talk-about-p2 {
+            font-size: 20rpx;
+            color: #999999;
+          }
+          .tag-top {
+            border-radius: 8rpx;
+            padding: 2rpx 10rpx;
+            background-color: #F18B27;
+            color: #ffffff;
+          }
+        }
+
+      }
+      .talk-topic-content {
+        font-size: 26rpx;
+        line-height: 46rpx;
+        color: #666666;
+      }
+      .talk-topic-bottom-line::before {
+        content: ''
+      }
+      .talk-topic-bottom-line {
+        font-size: 26rpx;
+        padding: 20rpx 0;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1rpx solid #CCCCCC;
+        .expand-btn {
+          color: #F18B27;
+          text-align: right;
+          width: 60px;
+          display: flex;
+          flex-flow: row nowrap;
+          align-items: center;
+          justify-content: flex-end;
+          .expand-icon {
+            width: 18rpx;
+            margin-left: 10rpx;
+          }
+        }
+      }
+      .comment-line1 {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        padding: 20rpx 0;
+        .comment-talkers {
+          flex: 1;
+          display: flex;
+          flex-flow: row nowrap;
+          margin-left: 20rpx;
+          .comment-avatar {
+            width: 60rpx;
+            height: 60rpx;
+            min-height: 60rpx;
+            min-width: 60rpx;
+            margin-left: -20rpx;
+            border-radius: 50%;
+          }
+        }
+        .desc-text {
+          flex: 1;
+          font-size: 26rpx;
+          color: #666666;
+          .comment-count {
+            color: #F18B27;
+          }
+        }
+        .opt-btns {
+          flex: 1;
+          display: flex;
+          flex-flow: row nowrap;
+          justify-content: space-between;
+          align-items: center;
+          .opt-item-btn {
+            width: 40rpx;
+            height: 40rpx;
+          }
+        }
+      }
+      .comment-line2 {
+        .comment-list {
+          font-size: 26rpx;
+          .comment-item {
+            margin: 8rpx 0;
+            color: #666666;
+            .reply-to {
+              color: #F18B27;
+            }
+            .talk-from {
+              color: #F18B27;
+            }
+            .content {
+              color: #666666;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>
+<script>
+import wepy from 'wepy'
+import Toast from 'wepy-com-toast'
+import isEmpty from 'lodash.isempty'
+import AuthMixin from '../mixins/auth'
+import api from '../http/api'
+import dateFormat from '../wxs/date.wxs'
+
+export default class Group extends wepy.page {
+  components = {
+    toast: Toast
+  }
+  mixins = [AuthMixin]
+  wxs = {
+    dateFormat: dateFormat
+  }
+  config = {
+    navigationBarTitleText: '雪人读书-读书社群'
+  }
+  data = {
+    group: null,
+    groupUser: null,
+    topics: []
+  }
+  methods = {
+    onShare() {
+      var promise = this.$invoke('toast', 'show', {
+          title: '敬请期待',
+          img: 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
+      })
+      promise.then((d) => {
+        console.log('toast done')
+      })
+    },
+    onAbout() {
+      var promise = this.$invoke('toast', 'show', {
+          title: '敬请期待',
+          img: 'https://raw.githubusercontent.com/kiinlam/wetoast/master/images/star.png'
+      })
+      promise.then((d) => {
+        console.log('toast done')
+      })
+    },
+    onPostTopic() {
+      wepy.navigateTo({ url: `/pages/write-note?groupId=${this.group.id}` })
+    }
+  }
+  onAuthLoad({groupId}, userInfo) {
+    // 获取 群组信息,
+    // 获取 topic 列表, topic 列表中包含所有 topic 的所有信息
+    api.loadGroupTopics(groupId).then(res => {
+      this.topics = res.data
+      this.$apply()
+    })
+    api.loadMyGroupById(groupId).then(res => {
+      var {group, groupUser} = res.data
+      this.group = group
+      this.groupUser = groupUser
+      if (isEmpty(groupUser)) {
+        wepy.navigateTo({ url: '/pages/index' })
+      } else {
+        wepy.setNavigationBarTitle({ title: group.name })
+        this.$apply()
+      }
+    })
+  }
+}
+</script>

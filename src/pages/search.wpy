@@ -1,0 +1,14 @@
+<style lang="less">
+    
+</style>
+<template>
+  <view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class Search extends wepy.page {
+
+}
+</script>
